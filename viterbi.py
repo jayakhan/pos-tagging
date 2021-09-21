@@ -5,6 +5,9 @@ import nltk
 from pos import build_hmm_components
 
 def viterbi(obs, pi, A, B):
+    print(len(A))
+    print(len(B))
+    print(len(pi))
     viterbi = np.ones((len(A), len(obs)), dtype='float32')
     viterbi_df = pd.DataFrame(viterbi)
     backpointer = np.ones((len(A), len(obs)), dtype='object')
@@ -29,17 +32,18 @@ def viterbi(obs, pi, A, B):
 def find_index(obs, obs_mat, obs_df):
     list_ints = []
     words_labels_list = [i for element in obs for i in element]
+    print(words_labels_list)
     words_tokens = set([vocab[0] for vocab in words_labels_list])
     for words in words_tokens:
         if words in [columns for columns in obs_df.columns]: 
             list_ints.append(obs_df.columns.get_loc(words))
-    return list_ints[0:10]
+    return list_ints
 
 
 if __name__ == "__main__":
     # Load corpus from nltk
-    training_corpus = nltk.corpus.brown.tagged_sents(tagset='universal')[10050:10060]
+    training_corpus = nltk.corpus.brown.tagged_sents(tagset='universal')[10150:10153]
     trans_mat, obs_mat, obs_df, pi_mat = build_hmm_components(training_corpus)
-    obs = nltk.corpus.brown.tagged_sents(tagset='universal')[10050:10060]
+    obs = nltk.corpus.brown.tagged_sents(tagset='universal')[10150:10153]
     obs_int = find_index(obs, obs_mat, obs_df)
-    viterbi(obs_int, pi_mat, trans_mat, obs_mat)
+    print(viterbi(obs_int, pi_mat, trans_mat, obs_mat))
