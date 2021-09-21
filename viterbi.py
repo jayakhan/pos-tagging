@@ -23,7 +23,7 @@ def viterbi(obs, pi, A, B):
     list_states = []
     best_prob = max(viterbi_df.iloc[: , -1])
     best_path_pointer = argmax(viterbi_df.iloc[: , -1])
-    # Fetch index of maximum probability from backpointer matrix
+    # Fetch index of maximum prob from backpointer matrix
     for i in pd.DataFrame(backpointer).iloc[-1,:]:
         list_states.append(i)
     return list_states
