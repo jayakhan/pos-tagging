@@ -61,9 +61,9 @@ def create_state(words_labels_list, words_tokens, labels_tokens, len_labels, len
     return state_df.transpose().values.tolist()[0]
 
 def build_hmm_components(corpus):
-    words_labels_list = [i for element in corpus for i in element]
-    words_tokens = set([vocab[0] for vocab in words_labels_list])
-    labels_tokens = set([label[1] for label in words_labels_list])
+    words_labels_list = [i for element in sorted(corpus) for i in element]
+    words_tokens = sorted(set([vocab[0] for vocab in words_labels_list]))
+    labels_tokens = sorted(set([label[1] for label in words_labels_list]))
     len_labels = len(labels_tokens)
     len_words = len(words_tokens)
     trans = create_transition_matrix(words_labels_list, words_tokens, labels_tokens, len_labels)
