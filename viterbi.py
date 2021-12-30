@@ -8,14 +8,16 @@ def viterbi(obs, pi, A, B):
     viterbi = np.ones((len(A), len(obs)), dtype='float32')
     viterbi_df = pd.DataFrame(viterbi)
     backpointer = np.ones((len(A), len(obs)), dtype='object')
+
     # Fill values in first column of viterbi matrix
     for s in range(0, len(A)):
         viterbi[s, 0] = pi[s] * B[s, 0]
         backpointer[s, 0] = 0
+        
     # Fill values in other columns of viterbi matrix
     for t in range(1, len(obs)):
         for s in range(0, len(A)): 
-            viterbi[s, t] = max(np.log(viterbi[m, t-1] * A[m, s] * B[s, t]) for m in range(0, len(A)))
+            viterbi[s, t] = max(np.log(viterbi[m, t-1] * A[m, s] * B[s, t] + 1) for m in range(0, len(A)))
             backpointer[s, t] = argmax(viterbi_df.iloc[:,t])
     list_states = []
     best_prob = max(viterbi_df.iloc[: , -1])
@@ -38,8 +40,12 @@ def find_index(obs, obs_df):
 
 if __name__ == "__main__":
     # Load corpus from nltk
-    training_corpus = nltk.corpus.brown.tagged_sents(tagset='universal')[10150:10153]
-    trans_mat, obs_mat, obs_df, pi_mat = build_hmm_components(training_corpus)
-    obs = nltk.corpus.brown.tagged_sents(tagset='universal')[10150:10153]
-    obs_int = find_index(obs, obs_df)
-    viterbi(obs_int, pi_mat, trans_mat, obs_mat)
+    training_corpus = nltk.corpus.brown.tagged_sents(tagset='universal')[:100]
+    trans_mat, obs_mat, obs_df, pi_df = build_hmm_components(training_corpus)
+
+    test_obs = nltk.corpus.brown.tagged_sents(tagset='universal')[10150:10153]
+    #obs_int = find_index(obs, obs_df)
+    test_tagged_words = [tup[0] for sent in test_obs for tup in sent]
+
+
+    print(viterbi(test_tagged_words, pi_df, trans_mat, obs_mat))
