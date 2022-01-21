@@ -1,7 +1,3 @@
-#submitted by:
-#Surabhi Trivedi
-#Jaya Khan
-
 import nltk
 import numpy as np
 import pandas as pd
